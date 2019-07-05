@@ -1,0 +1,255 @@
+<html>
+<head>
+<style>
+body {
+  background-color: lightblue;
+}
+h1 , h2, h3, span {
+	margin: 0;
+}
+
+h1 {
+	font-size: 16rem;
+}
+
+h2 {
+	font-size: 3rem;
+}
+
+h3 {
+	font-size: 1.5rem;
+}
+
+span {
+	font-size: 6rem;
+	font-weight: 600;
+}
+
+.container{
+  width: 500px;
+  height: 300px;
+  margin:25vh auto;
+  border-radius: 25px;
+  box-shadow: 0 20px 40px 0px rgba(0,0,0,0.3)
+}
+
+.header {
+  height: 20%;
+  background-color: #FF9800;
+  border-top-left-radius: 25px;
+  border-top-right-radius: 25px;
+  text-align: center;
+  position:relative;
+}
+
+#temp, #humidity-div {
+  font-family: "Courier New";
+  font-weight: bold;
+  font-size: 60px;
+  color: #fff;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+}
+
+.city-icon-holder {
+  position:absolute;
+  left: 25%;
+  top: 40%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+#city-name {
+  font-family: "Courier New";
+  font-size: 30px;
+  font-weight: bold;
+  color: #fff;
+}
+
+#icon {
+  width:100%;
+}
+
+#main{
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.city-icon {
+  height: 80%;
+  width: 50%;
+  border-bottom-left-radius: 25px;
+  background-color: #FFC107;
+}
+
+.temperature {
+  position: absolute;
+  left: 50%;
+  top:0%;
+  height: 40%;
+  width: 50%;
+  background-color: #9C27B0;
+}
+
+.humidity {
+  height: 40%;
+  width: 50%;
+  position:absolute;
+  left:50%;
+  top:40%;
+  border-bottom-right-radius: 25px;
+  background-color: #E91E63;
+}
+
+#search-btn {
+  width: 40px;
+  height:40px;
+  color: #eee;
+}
+
+#search-txt {
+  color: red;
+  height:30px;
+  border-radius: 10px;
+  border-style:none;
+  outline:none;
+  padding-right:1px;
+  padding-left:1px;
+  text-align:center;
+}
+
+.search {
+  position: absolute;
+  left: 50%;
+  top:50%;
+  -webkit-transform:translate(-50%,-50%);
+          transform:translate(-50%,-50%);
+}
+
+</style>
+
+</head>
+<body>
+<h2>We have weather info for</h2>
+
+<h3><ul>
+  <li>Monday</li>
+  <li>Tuesday </li>
+  <li>Wednesday</li>
+  <li>Thursday</li>
+  <li>Friday</li>
+  <li>Saturday</li>
+  <li>Sunday</li>
+</ul> </h3>
+
+
+
+
+
+<div class="container">
+  <header class="header">
+    <div class="search">
+      <input type="text" placeholder="Enter City Name and pressed enter" id="search-txt">
+      <a id="search-btn" href="#"><i class="fas fa-search"></i></a>
+    </div>
+  </header>
+
+  <main id="main">
+    
+    <div class="city-icon">
+      <div class="city-icon-holder">
+      <div id="city-name"></div>
+      <img src="" alt="" id="icon">
+        </div>
+    </div>
+    
+    <div class="temperature">
+      <div id="temp"></div>
+    </div>
+    
+    <div class="humidity">
+      <div id="humidity-div"></div>
+    </div>
+    
+  </main>
+  
+</div>
+  
+
+  
+<script>
+   const appKey = "31440c24e3dd498b3b2cebdb8a460a70";
+
+let searchButton = document.getElementById("search-btn");
+let searchInput = document.getElementById("search-txt");
+let cityName = document.getElementById("city-name");
+let icon = document.getElementById("icon");
+let temperature = document.getElementById("temp");
+let humidity = document.getElementById("humidity-div");
+
+searchButton.addEventListener("click", findWeatherDetails);
+searchInput.addEventListener("keyup", enterPressed);
+
+function enterPressed(event) {
+  if (event.key === "Enter") {
+    findWeatherDetails();
+  }
+}
+
+function findWeatherDetails() {
+  if (searchInput.value === "") {
+  
+  }else {
+    let searchLink = "https://api.openweathermap.org/data/2.5/weather?q=" + searchInput.value + "&appid="+appKey;
+   httpRequestAsync(searchLink, theResponse);
+  }
+ }
+
+function theResponse(response) {
+  let jsonObject = JSON.parse(response);
+  cityName.innerHTML = jsonObject.name;
+  icon.src = "http://openweathermap.org/img/w/" + jsonObject.weather[0].icon + ".png";
+  temperature.innerHTML = parseInt(jsonObject.main.temp - 273) + "°";
+  humidity.innerHTML = jsonObject.main.humidity + "%";
+}
+
+function httpRequestAsync(url, callback)
+{
+  console.log("hello");
+    var httpRequest = new XMLHttpRequest();
+    httpRequest.onreadystatechange = () => { 
+        if (httpRequest.readyState == 4 && httpRequest.status == 200)
+            callback(httpRequest.responseText);
+    }
+    httpRequest.open("GET", url, true); // true for asynchronous 
+    httpRequest.send();
+}
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+<a class="weatherwidget-io" href="https://forecast7.com/en/40d71n74d01/new-york/" data-label_1="Cacak" data-label_2="WEATHER" data-theme="original" >NEW YORK WEATHER</a>
+<script>
+!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
+</script>
+
+
+
+
+</body>
+</html>
+
